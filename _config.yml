@@ -3,9 +3,9 @@
 # ----------------------- #
 
 url: http://xhcnb.github.io
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+title: Xu' Blog
+subtitle: Mobile Game Developer
+author: Jason Xu
 simple_search: http://google.com/search
 description:
 
@@ -90,11 +90,11 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
-disqus_show_comment_count: false
+disqus_short_name: ready4go
+disqus_show_comment_count: true
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-40931904-1
 
 # Facebook Like
 facebook_like: false

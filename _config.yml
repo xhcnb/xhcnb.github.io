@@ -2,9 +2,9 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://xhcnb.github.io
+url: http://blog.ready4go.com
 title: Xu' Blog
-subtitle: Mobile Game Developer
+subtitle: "mobile game developer interest in haXe,nme,cocos2d-x"
 author: Jason Xu
 simple_search: http://google.com/search
 description:
@@ -63,8 +63,8 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.
 # ----------------------- #
 
 # Github repositories
-github_user:
-github_repo_count: 0
+github_user: xhcnb
+github_repo_count: 10
 github_show_profile_link: true
 github_skip_forks: true
 

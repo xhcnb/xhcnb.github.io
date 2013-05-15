@@ -12,5 +12,7 @@ Hello World!
 
 code aera:
 
-	MPMusicPlayerController *mpc = [MPMusicPlayerController applicationMusicPlayer];
-	mpc.volume = 0;  //0.0~1.0
+``` objective-c 
+MPMusicPlayerController *mpc = [MPMusicPlayerController applicationMusicPlayer];
+mpc.volume = 0;  //0.0~1.0
+```

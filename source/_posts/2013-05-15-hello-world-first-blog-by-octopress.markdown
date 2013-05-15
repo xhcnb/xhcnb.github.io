@@ -1,5 +1,16 @@
+---
+layout: post
+title: "Hello World: First Blog by octopress"
+date: 2013-05-15 15:40
+comments: true
+categories: 
+---
+
 Hello World!
-# 中文测试,你好!
-代码段测试:
-> MPMusicPlayerController *mpc = [MPMusicPlayerController applicationMusicPlayer];
-> mpc.volume = 0;  //0.0~1.0
+
+中文测试,你好
+
+code aera:
+
+	MPMusicPlayerController *mpc = [MPMusicPlayerController applicationMusicPlayer];
+	mpc.volume = 0;  //0.0~1.0

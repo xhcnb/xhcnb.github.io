@@ -3,7 +3,7 @@ layout: post
 title: "[原创]使用eclipse调试cocos2d-x Native C++ 代码"
 date: 2013-05-17 16:34
 comments: true
-categories: 
+categories: [cocos2d-x,android,NDK,eclipse]
 ---
 
 前提条件:
@@ -96,7 +96,7 @@ Debug界面上的按钮就不再多说了,就是继续执行,单步执行什么�
 
 ##Enjoy!
 
-[原创文章,转载请注明]
+[原创文章,转载请注明](http://blog.ready4go.com/)
 <br/><br/><br/>
 
 PS:

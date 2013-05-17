@@ -8,8 +8,9 @@ categories:
 
 前提条件:
 
-* 你已经下载coccos2d-x和[NDK](http://developer.android.com/tools/sdk/ndk/index.html),并且会使用`build_native.sh`和[eclipse](http://www.eclipse.org/downloads/)编译cocos2d-x项目
+* 你已经下载[coccos2d-x](http://cocos2d-x.org/projects/cocos2d-x/wiki/Download)和[NDK](http://developer.android.com/tools/sdk/ndk/index.html),并且会使用`build_native.sh`和[eclipse](http://www.eclipse.org/downloads/)编译cocos2d-x项目
 
+windows下可以参考夜阑卧听风吹雨的[让人死去活来的cocos2d-x安卓开发环境搭建(windows+eclipse+ndk 不用cygwin)](http://www.cnblogs.com/ybgame/archive/2012/06/07/2540693.html)
 
 ##安装NDK Plugin
 英文好的同学可以直接查看官方说明[Using the NDK plugin](http://tools.android.com/recent/usingthendkplugin),这里我简单翻译一下

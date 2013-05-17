@@ -23,7 +23,7 @@ categories:
 
 ##导入cocos2d-x目录下的示例游戏
 这里我以`cocos2d-2.1rc0-x-2.1.3/samples/Cpp/SimpleGame`这个自带的小游戏为例子来说明一下.
-
+<!-- more -->
 假设你的eclipse是干净的,也就是左边的Package Explorer栏是空空的
 
 
@@ -41,12 +41,12 @@ __________________________________________
 
 1. 在eclipse的Package Explorer里右击SimpleGame项目,选"Properties",打开项目属性框
 2. 按下面设置Tool Chain Editor
-{% img /source/images/ndk_debug/set_1.png %}
+{% img /images/ndk_debug/set_1.png %}
 3. 再设置ndk-build的命令,为 `ndk-build NDK_DEBUG=1`,确定,关闭对话框
-{% img /source/images/ndk_debug/set_2.png %}
+{% img /images/ndk_debug/set_2.png %}
 4. 这个时候,你选择Project->Build All,会出现错误,意思是NDK_MODULE_PATH设置不对
-{% img /source/images/ndk_debug/error_1.png %}
-5. 这里我不设置NDK_MODULE_PATH,因为设置了它会让我们无法调试C++代码,解决上面问题的办法是,把编译过程中需要的库拷贝到系统默认的NDK_MODULE_PATH里,跟我来做
+{% img /images/ndk_debug/error_1.png %}
+5. 这里我们不设置NDK_MODULE_PATH,因为设置了它会让我们无法调试C++代码,解决上面问题的办法是:把编译过程中需要的库拷贝到系统默认的NDK_MODULE_PATH里,跟我来做
 6. 复制cocos2d-2.1rc0-x-2.1.3目录下的`cocos2dx,CocosDenshion,extensions,external`这4个目录到你的NDK的sources目录下,以我的电脑为例,就是/android/android-ndk-r8e/sources
 7. 复制cocos2d-2.1rc0-x-2.1.3/cocos2dx/platform/third_party/android/prebuilt目录的所有到NDK的sources目录下
 8. 这样我们复制到NDK的sources目录下的目录一共有`cocos2dx,CocosDenshion,extensions,external, libcurl,libjpeg,libpng,libtiff,libwebp`这几个
@@ -83,20 +83,20 @@ Project->Build ALL 编译项目,应该可以成功编译
 ##调试
 
 1. 我们给Classes目录下的HelloWorldScene.cpp文件里的ccTouchesEnd方法下一个断点,这样游戏运行后,点击屏幕应该可以触发我们的断点
-{% img /source/images/ndk_debug/addbreakpoint.png %}
+{% img /images/ndk_debug/addbreakpoint.png %}
 2. 把手机连接到电脑上,右击SimpleGame, 选 Debug As->Android Native Application
 3. 如果需要选择手机,选你想调试的
 4. 游戏运行起来后,触摸屏幕,可以看到
 
-{% img /source/images/ndk_debug/breakpoint.png %}
+{% img /images/ndk_debug/breakpoint.png %}
 
 eclipse自动切换到了Debug界面,而且成功的断点下来了,并且变量可以在右边窗口查看
 Debug界面上的按钮就不再多说了,就是继续执行,单步执行什么的几个,摸索一下便知
 
 ##Enjoy!
 
-
-<br/><br/><br/><br/><br/>
+[原创文章,转载请注明]
+<br/><br/><br/>
 
 PS:
 上述操作中我们复制了cocos2dx的好多文件到NDK的目录下面去,显的有点繁琐,这样做的目录是为了避开去设置NDK_MODULE_PATH,如果一旦设置了NDK_MODULE_PATH,就会使的调试不可行,可能有更好的方法,如果你知道,或者有什么问题都可以直接在文章下面留言

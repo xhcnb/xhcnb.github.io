@@ -3,7 +3,7 @@ layout: post
 title: "使用Clover 修正被黑苹果识别为 HD 6xxx 的 HD 6450显卡"
 date: 2013-05-19 21:27
 comments: true
-categories: 黑苹果, Clover
+categories: [hackintosh, Clover]
 ---
 
 AMD HD6450 显卡在黑苹果（OS X 10.7 和 10.8）下是免驱动,不需要任何设置直接就可以使用的，唯一的不足就是系统没有正确识别显卡型号，显卡为 "`AMD Radeon HD 6xxx`"，平时是不影响使用的  

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "命令行小程序调用词典查单词"
+title: "Mac下的命令行小程序调用词典查单词"
 date: 2013-06-18 19:29
 comments: true
 categories: mac

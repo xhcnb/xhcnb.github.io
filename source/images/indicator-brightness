@@ -1,0 +1,171 @@
+#!/usr/bin/python
+# With this indicator you can set your screen brightness in Unity.
+#
+# Copyright (C) 2011  Erwin Rohde
+# Many thanks to Jan Simon for setting up and maintaining this indicator in launchpad.
+# Dbus code heavily borrowed from https://github.com/majorsilence/pygtknotebook/tree/master/examples/dbus
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+import gobject
+import gtk
+import appindicator
+import subprocess
+import re
+import dbus
+import dbus.service
+from dbus.mainloop.glib import DBusGMainLoop
+
+#added by Jason Xu 07/23/2013
+import os
+import os.path
+filepath = os.path.expanduser('~')+"/.brightness"
+def save_to_file(rec):	
+	try:
+		savefile = open(filepath, "w")
+		savefile.write("%s" % rec)
+		savefile.close()
+	except:
+		savefile = ""
+	
+def read_from_file():
+	lastBrightness = 0
+	try:
+		savefile = open(filepath, "r")
+		lastBrightness = int(savefile.read())
+		savefile.close()
+	except:
+		lastBrightness = 0
+	return lastBrightness
+#end 07/23/2013
+
+# Depends on gnome-settings-daemon
+MAXSTEPS = 15
+
+closest = lambda num,list:min(list,key=lambda x:abs(x-num))
+
+class DBusObject(dbus.service.Object):
+
+    @dbus.service.method(dbus_interface='com.ubuntu.indicator.brightness', in_signature='', out_signature='')
+    def brightness_down(self):
+        brightness_down()
+
+    @dbus.service.method(dbus_interface='com.ubuntu.indicator.brightness', in_signature='', out_signature='')
+    def brightness_up(self):
+        brightness_up()
+
+def menuitem_response(w, buf):
+  buf = re.sub('[^\d]', '', buf)
+  set_brightness(str(brightness_settings[int(buf)]))
+
+def scroll_wheel_icon(w, m, d):
+
+  if int(d) == int(gtk.gdk.SCROLL_DOWN):
+    brightness_down()
+  elif int(d) == int(gtk.gdk.SCROLL_UP):
+    brightness_up()
+    
+def brightness_up():
+  curr_brightness = get_curr_brightness()
+  curr_brightness = curr_brightness + 1
+  if curr_brightness > len(brightness_settings)-1:
+    curr_brightness = len(brightness_settings)-1
+  set_brightness(str(brightness_settings[curr_brightness]))
+  
+def brightness_down():
+  curr_brightness = get_curr_brightness()
+  curr_brightness = curr_brightness -1
+  if curr_brightness == -1:
+    curr_brightness = 0
+  set_brightness(str(brightness_settings[curr_brightness]))
+
+def set_brightness(brightness):
+  subprocess.call(['pkexec','/usr/lib/gnome-settings-daemon/gsd-backlight-helper','--set-brightness',"%s" % brightness])
+  save_to_file(brightness)
+  create_menu(ind)
+
+def get_curr_brightness():
+  c = 0
+  try:
+    p = subprocess.Popen(['pkexec','/usr/lib/gnome-settings-daemon/gsd-backlight-helper','--get-brightness'], stdout=subprocess.PIPE)
+    curr_brightness = int(p.communicate()[0])
+    c = closest(curr_brightness, brightness_settings)
+  except:
+    c = 0    
+  return brightness_settings.index(c)
+
+def get_brightness_settings():
+  if max_brightness < MAXSTEPS:
+    bs = range(0, max_brightness, 1)
+  else:
+    bs = range(0, max_brightness, max_brightness/MAXSTEPS)
+  bs.append(max_brightness)
+  return bs
+
+def get_max_brightness():
+  mb = 0
+  try:
+    p = subprocess.Popen(['pkexec','/usr/lib/gnome-settings-daemon/gsd-backlight-helper','--get-max-brightness'], stdout=subprocess.PIPE)
+    mb = int(p.communicate()[0])
+  except:
+    mb = 0
+  return mb
+
+def create_menu(ind):
+  curr_brightness = get_curr_brightness()
+
+  menu = gtk.Menu()
+
+  if max_brightness == 0:
+    menu_items = gtk.MenuItem("No backlights were found on your system")
+    menu_items.set_sensitive(False)
+    menu.append(menu_items)
+    menu_items.show()
+  else:
+    for i in range(len(brightness_settings)-1,-1,-1):
+      buf = "%d" % i
+      if i == curr_brightness:
+        buf = u"%d \u2022" % i
+
+      menu_items = gtk.MenuItem(buf)
+      menu.append(menu_items)
+      menu_items.connect("activate", menuitem_response, buf)
+      menu_items.show()
+
+  # show the items
+  ind.set_menu(menu)
+
+ind = appindicator.Indicator ("indicator-brightness",
+                              "/usr/share/notify-osd/icons/gnome/scalable/status/notification-display-brightness-full.svg",
+                              appindicator.CATEGORY_HARDWARE)
+ind.set_status (appindicator.STATUS_ACTIVE)
+ind.connect("scroll-event", scroll_wheel_icon)
+
+max_brightness = get_max_brightness()
+brightness_settings = get_brightness_settings()
+
+if __name__ == "__main__":
+  rec = read_from_file()
+  if rec != 0:
+      set_brightness(rec)
+    
+  create_menu(ind)
+  
+  # Start DBus Service, listen for brightness up/down signals
+  dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+  session_bus = dbus.SessionBus()
+  name = dbus.service.BusName("com.ubuntu.indicator.brightness", session_bus)
+  object = DBusObject(session_bus, "/adjust")
+  
+  gtk.main()

@@ -11,7 +11,9 @@ categories: [xcode]
 {% img /images/twopeople.png %} 
 
 我喜欢左边的风格, 很不幸xcode默认的代码提示自动完成都是右边风格的, 修改它一下  
-用文本编辑工具打开文件:`/Applications/Xcode.app/Contents/PlugIns/IDECodeSnippetLibrary.ideplugin/Contents/Resources/SystemCodeSnippets.codesnippets`
+用文本编辑工具打开文件:  
+`/Applications/Xcode.app/Contents/PlugIns/IDECodeSnippetLibrary.ideplugin/Contents/Resources/SystemCodeSnippets.codesnippets`  
+
 可以看到里面是xcode预定义的自动完成代码, 找到要修改的`{`地方, 比如
 	
 	<string>class &lt;#class name#&gt; {

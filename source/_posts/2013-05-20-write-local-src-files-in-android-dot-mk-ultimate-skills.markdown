@@ -116,21 +116,22 @@ categories: [android,NDK]
 
 ###终极进阶:引入多个目录(包括子目录)下的多个后缀名的源文件
 
-上代码:
+上代码(2013年10月9日修正):
 	
-	MY_FILES_PATH  :=  $(LOCAL_PATH)/ \
-					   $(LOCAL_PATH)/../src_files/
+	# 扫描目录下的所有源文件
+	MY_FILES_PATH  :=  $(LOCAL_PATH) \
+	                   $(LOCAL_PATH)/../../Classes
 
 	MY_FILES_SUFFIX := %.cpp %.c %.cc
-	
-	My_All_Files := $(foreach src_path,$(MY_FILES_PATH), $(shell find $(src_path)/.) ) 
+
+	My_All_Files := $(foreach src_path,$(MY_FILES_PATH), $(shell find $(src_path) -type f) ) 
 	My_All_Files := $(My_All_Files:$(MY_CPP_PATH)/./%=$(MY_CPP_PATH)%)
-	MY_CPP_LIST  := $(filter $(MY_FILES_SUFFIX),$(My_All_Files)) 
-	MY_CPP_LIST  := $(MY_CPP_LIST:$(LOCAL_PATH)/%=%)
-	 
-	LOCAL_SRC_FILES := $(MY_CPP_LIST)
+	MY_SRC_LIST  := $(filter $(MY_FILES_SUFFIX),$(My_All_Files)) 
+	MY_SRC_LIST  := $(MY_SRC_LIST:$(LOCAL_PATH)/%=%)
+	LOCAL_SRC_FILES := $(MY_SRC_LIST)
 	
 以上代码中,变量`MY_FILES_PATH`保存源文件所在目录,`MY_FILES_SUFFIX`保存源文件的后缀名
+
 
 [原创文章,转载请注明,谢谢!](http://blog.ready4go.com/)
 

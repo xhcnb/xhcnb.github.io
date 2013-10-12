@@ -6,6 +6,15 @@ comments: true
 categories: [android,NDK]
 ---
 
+
+
+
+#已废弃, 请参考[Update: Android.mk 中的 LOCAL_SRC_FILES, LOCAL_C_INCLUDES](/blog/2013/10/12/update-android-dot-mk-with-local-src-files-and-local-c-includes/)
+  
+  
+  
+  
+  
 在编写`android.mk`的过程中,免不了要修改`LOCAL_C_INCLUDES`来设置头文件的include目录, 一般写成这样
 
 	LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \

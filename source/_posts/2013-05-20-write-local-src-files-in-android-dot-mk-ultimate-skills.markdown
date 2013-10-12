@@ -6,6 +6,12 @@ comments: true
 categories: [android,NDK]
 ---
 
+#已废弃, 请参考[Update: Android.mk 中的 LOCAL_SRC_FILES, LOCAL_C_INCLUDES](/blog/2013/10/12/update-android-dot-mk-with-local-src-files-and-local-c-includes/)
+  
+  
+  
+  
+  
 ###问题的引入
 在使用NDK编译C/C++项目的过程中,免不了要编写Android.mk文件,其中最重要的就是`LOCAL_SRC_FILES`源文件列表.  
 考虑有如下源文件分布的情况:

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Category: ubuntu | Xu&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Xu' Blog">
+<meta property="og:url" content="http://blog.ready4go.com/categories/python/ubuntu/">
+<meta property="og:site_name" content="Xu' Blog">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Xu' Blog">
+<meta name="twitter:description">
+
+  
+    <link rel="alternative" href="/atom.xml" title="Xu&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-40931904-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xu&#39; Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">mobile game developer interest in haXe,nme,cocos2d-x.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="blog.ready4go.com">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-patch-indicator-brightness-with-auto-save-on-ubuntu-13-dot-04" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2013/07/24/patch-indicator-brightness-with-auto-save-on-ubuntu-13-dot-04/" class="article-date">
+  <time datetime="2013-07-24T07:07:00.000Z" itemprop="datePublished">7月 24 2013</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>►<a class="article-category-link" href="/categories/python/ubuntu/">ubuntu</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2013/07/24/patch-indicator-brightness-with-auto-save-on-ubuntu-13-dot-04/">Ubuntu 13.04 不能保存屏幕亮度的补丁</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>安装Ubuntu后,再安装<a href="https://launchpad.net/~indicator-brightness/+archive/ppa" target="_blank" rel="external">屏幕亮度指示器(Indicator Brightness)</a>, 发现每次重启后亮度都会恢复到最大,无法记忆上次设置的屏幕亮度.经查看,这个指示器是python写的,脚本路径是<code>/opt/extras.ubuntu.com/indicator-brightness/indicator-brightness</code>, 决定在修改脚本,增加自动保存亮度的代码.</p>
+<p>使用任何文件编辑器打开它, 在开头添加如下两个方法来保存和加载亮度数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> os.path</div><div class="line">filepath = os.path.expanduser(<span class="string">'~'</span>)+<span class="string">"/.brightness"</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_to_file</span><span class="params">(rec)</span>:</span>	</div><div class="line">	<span class="keyword">try</span>:</div><div class="line">		savefile = open(filepath, <span class="string">"w"</span>)</div><div class="line">		savefile.write(<span class="string">"%s"</span> % rec)</div><div class="line">		savefile.close()</div><div class="line">	<span class="keyword">except</span>:</div><div class="line">		savefile = <span class="string">""</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_from_file</span><span class="params">()</span>:</span></div><div class="line">	lastBrightness = <span class="number">0</span></div><div class="line">	<span class="keyword">try</span>:</div><div class="line">		savefile = open(filepath, <span class="string">"r"</span>)</div><div class="line">		lastBrightness = int(savefile.read())</div><div class="line">		savefile.close()</div><div class="line">	<span class="keyword">except</span>:</div><div class="line">		lastBrightness = <span class="number">0</span></div><div class="line">	<span class="keyword">return</span> lastBrightness</div></pre></td></tr></table></figure>
+
+<p>这里,我把当前亮度保存<code>$HOME/.brightness</code>文件里.<br>再添加对这两个方法的调用<br>在<code>if __name__ == &quot;__main__&quot;:</code>后面添加</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">rec = read_from_file()</div><div class="line"><span class="keyword">if</span> rec != <span class="number">0</span>:</div><div class="line">    set_brightness(rec)</div></pre></td></tr></table></figure>
+
+<p>读取保存的亮度记录,并设置</p>
+<p>同时修改<code>set_brightness</code>方法为:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_brightness</span><span class="params">(brightness)</span>:</span></div><div class="line">  subprocess.call([<span class="string">'pkexec'</span>,<span class="string">'/usr/lib/gnome-settings-daemon/gsd-backlight-helper'</span>,<span class="string">'--set-brightness'</span>,<span class="string">"%s"</span> % brightness])</div><div class="line">  save_to_file(brightness)</div><div class="line">  create_menu(ind)</div></pre></td></tr></table></figure>
+
+<p>保存<code>indicator-brightness</code>文件,并修复权限</p>
+<pre><code><span class="built_in">sudo</span> chown root:root indicator-brightness
+<span class="built_in">sudo</span> chmod <span class="number">755</span> indicator-brightness
+</code></pre><p>注销,重新登录,生效</p>
+<p>附件为我修改的<code>indicator-brightness</code>文件, 这里<a href="/images/indicator-brightness">下载Download</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://blog.ready4go.com/blog/2013/07/24/patch-indicator-brightness-with-auto-save-on-ubuntu-13-dot-04/" data-id="x0ootiqfbjzmjhil" class="article-share-link">分享到</a>
+      
+
+      
+        <a href="http://blog.ready4go.com/blog/2013/07/24/patch-indicator-brightness-with-auto-save-on-ubuntu-13-dot-04/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+  
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/Ubuntu/">Ubuntu</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/Ubuntu/Mac/">Mac</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/Ubuntu/Mac/TimeMachine/">TimeMachine</a><span class="category-list-count">1</span></li></ul></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mac/">Mac</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Mac/xcode/">xcode</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK/">NDK</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/NDK/xcode/">xcode</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/android/NDK/">NDK</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/android/eclipse/">eclipse</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromebook-pixel/">chromebook_pixel</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/chromebook-pixel/linux/">linux</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/cocos2d-x/">cocos2d-x</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/cocos2d-x/android/">android</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/cocos2d-x/android/NDK/">NDK</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/cocos2d-x/android/NDK/eclipse/">eclipse</a><span class="category-list-count">1</span></li></ul></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/hackintosh/">hackintosh</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/hackintosh/Clover/">Clover</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/mac/">mac</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/ubuntu/">ubuntu</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/xcode/">xcode</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">October 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">September 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">August 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">July 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">June 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">May 2013</a><span class="archive-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2014/06/06/xcode6-beta-build-fix/">xcode6_beta build fix: Undefined symbols _fwrite$UNIX2003</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2013/11/06/issue-about-xcode-5-with-copy-resource-files/">解决 xcode 5 资源文件更新后不自动复制的问题</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2013/10/25/set-ubuntu-as-mac-afp-and-timemachine-server-with-netatalk-3-dot-05/">Set ubuntu as Mac AFP&amp;amp;TimeMachine server with netatalk 3.05</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2013/10/12/update-android-dot-mk-with-local-src-files-and-local-c-includes/">Update: Android.mk 中的 LOCAL_SRC_FILES, LOCAL_C_INCLUDES</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2013/10/10/change-xcode-code-snippet-style/">自定义xcode代码提示的风格</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="http://blog-fengjian.rhcloud.com/" target="_blank">风间星魂</a>
+          </li>
+        
+          <li>
+            <a href="http://tech.i24e.co/" target="_blank">Charles</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 Jason Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'ready4go';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+<! -- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+                processEscapes: true
+                    
+}
+  
+        });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+                  
+}
+    
+        });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Queue(function() {
+            var all = MathJax.Hub.getAllJax(), i;
+            for(i=0; i < all.length; i += 1) {
+                            all[i].SourceElement().parentNode.className += ' has-jax';
+                                    
+            }
+                
+        });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

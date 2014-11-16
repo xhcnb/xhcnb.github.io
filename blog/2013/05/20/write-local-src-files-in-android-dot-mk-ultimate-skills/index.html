@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>[原创]编写Android.mk中的LOCAL_SRC_FILES的终极技巧 | Xu&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="已废弃, 请参考Update: Android.mk 中的 LOCAL_SRC_FILES, LOCAL_C_INCLUDES
+问题的引入
+在使用NDK编译C/C++项目的过程中,免不了要编写Android.mk文件,其中最重要的就是LOCAL_SRC_FILES源文件列表.考虑有如下源文件分布的情况:
+cpp文件全部位于android项目下的jni文件夹下,结构如下
+
+    jni">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[原创]编写Android.mk中的LOCAL_SRC_FILES的终极技巧">
+<meta property="og:url" content="http://blog.ready4go.com/blog/2013/05/20/write-local-src-files-in-android-dot-mk-ultimate-skills/">
+<meta property="og:site_name" content="Xu' Blog">
+<meta property="og:description" content="已废弃, 请参考Update: Android.mk 中的 LOCAL_SRC_FILES, LOCAL_C_INCLUDES
+问题的引入
+在使用NDK编译C/C++项目的过程中,免不了要编写Android.mk文件,其中最重要的就是LOCAL_SRC_FILES源文件列表.考虑有如下源文件分布的情况:
+cpp文件全部位于android项目下的jni文件夹下,结构如下
+
+    jni">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[原创]编写Android.mk中的LOCAL_SRC_FILES的终极技巧">
+<meta name="twitter:description" content="已废弃, 请参考Update: Android.mk 中的 LOCAL_SRC_FILES, LOCAL_C_INCLUDES
+问题的引入
+在使用NDK编译C/C++项目的过程中,免不了要编写Android.mk文件,其中最重要的就是LOCAL_SRC_FILES源文件列表.考虑有如下源文件分布的情况:
+cpp文件全部位于android项目下的jni文件夹下,结构如下
+
+    jni">
+
+  
+    <link rel="alternative" href="/atom.xml" title="Xu&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-40931904-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xu&#39; Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">mobile game developer interest in haXe,nme,cocos2d-x.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="blog.ready4go.com">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-write-local-src-files-in-android-dot-mk-ultimate-skills" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2013/05/20/write-local-src-files-in-android-dot-mk-ultimate-skills/" class="article-date">
+  <time datetime="2013-05-20T05:41:00.000Z" itemprop="datePublished">5月 20 2013</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>►<a class="article-category-link" href="/categories/android/NDK/">NDK</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      [原创]编写Android.mk中的LOCAL_SRC_FILES的终极技巧
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="已废弃,_请参考Update:_Android-mk_中的_LOCAL_SRC_FILES,_LOCAL_C_INCLUDES">已废弃, 请参考<a href="/blog/2013/10/12/update-android-dot-mk-with-local-src-files-and-local-c-includes/">Update: Android.mk 中的 LOCAL_SRC_FILES, LOCAL_C_INCLUDES</a></h1>
+<h3 id="问题的引入">问题的引入</h3>
+<p>在使用NDK编译C/C++项目的过程中,免不了要编写Android.mk文件,其中最重要的就是<code>LOCAL_SRC_FILES</code>源文件列表.<br>考虑有如下源文件分布的情况:</p>
+<pre><code><span class="comment">cpp文件全部位于android项目下的jni文件夹下</span><span class="string">,</span><span class="comment">结构如下</span>
+
+    <span class="comment">jni</span>    
+     <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">1</span><span class="string">.</span><span class="comment">cpp</span>
+     <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">2</span><span class="string">.</span><span class="comment">cpp</span>
+     <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">Android</span><span class="string">.</span><span class="comment">mk</span>
+     <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">Application</span><span class="string">.</span><span class="comment">mk</span>
+     <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">ndk_test</span><span class="string">.</span><span class="comment">cpp</span>
+     <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">src</span>    
+     <span class="comment">|</span>    <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">core</span>
+     <span class="comment">|</span>    <span class="comment">|</span>    <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">core1</span><span class="string">.</span><span class="comment">cpp</span>
+     <span class="comment">|</span>    <span class="comment">|</span>    <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">core2</span><span class="string">.</span><span class="comment">cpp</span>
+     <span class="comment">|</span>    <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">src1</span><span class="string">.</span><span class="comment">cpp</span>
+     <span class="comment">|</span>    <span class="comment">|</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">src2</span><span class="string">.</span><span class="comment">cpp</span>
+</code></pre><p>按照通常的写法,在<code>android.mk</code>中,应该写入</p>
+<pre><code>LOCAL_SRC_FILES := ndk_test.cpp <span class="command">\
+</span>                1.cpp <span class="command">\
+</span>                2.cpp <span class="command">\
+</span>                src/src1.cpp <span class="command">\
+</span>                src/src2.cpp <span class="command">\
+</span>                src/core/core1.cpp <span class="command">\
+</span>                src/core/core2.cpp
+</code></pre><p>繁琐不堪!</p>
+<h3 id="初步解法:一句话引入单个目录(不包括子目录)下的所有cpp源文件">初步解法:一句话引入单个目录(不包括子目录)下的所有cpp源文件</h3>
+<p><a id="more"></a><br>继续上面的情况为例,我可以这样写</p>
+<pre><code><span class="constant">MY_CPP_LIST</span> <span class="symbol">:</span>= <span class="variable">$(</span>wildcard <span class="variable">$(</span><span class="constant">LOCAL_PATH</span>)/*.cpp)
+<span class="constant">MY_CPP_LIST</span> += <span class="variable">$(</span>wildcard <span class="variable">$(</span><span class="constant">LOCAL_PATH</span>)/src/*.cpp)
+<span class="constant">MY_CPP_LIST</span> += <span class="variable">$(</span>wildcard <span class="variable">$(</span><span class="constant">LOCAL_PATH</span>)/src/core/*.cpp)
+
+<span class="constant">LOCAL_SRC_FILES</span> <span class="symbol">:</span>= <span class="variable">$(</span><span class="constant">MY_CPP_LIST</span><span class="symbol">:</span><span class="variable">$(</span><span class="constant">LOCAL_PATH</span>)/%=%)
+</code></pre><p>问题解决.<br>简单解释一下上面的几句话 </p>
+<ol>
+<li><code>MY_CPP_LIST := $(wildcard $(LOCAL_PATH)/*.cpp)</code>,这句话的意思是使用wildcard函数获取$(LOCAL_PATH)目录也就是jni目录下的所有后缀名为cpp的文件,并把结果放到变量<code>MY_CPP_LIST</code>里.我们知道$(LOCAL_PATH)指的是当前<code>Android.mk</code>文件所在目录,所以通过这句话,<code>MY_CPP_LIST</code>中的值应该是<code>jni/1.cpp jni/2.cpp jni/ndk_test.cpp</code>.</li>
+<li><code>MY_CPP_LIST += $(wildcard $(LOCAL_PATH)/src/*.cpp)</code>, 获取<code>jni/src</code>目录下的源文件,并追加到变量<code>MY_CPP_LIST</code>里</li>
+<li><code>MY_CPP_LIST += $(wildcard $(LOCAL_PATH)/src/core/*.cpp)</code>,同上,获取<code>jni/src/core</code>目录下的源文件</li>
+<li>通过以上几步,得到<code>MY_CPP_LIST</code>中内容是<code>jni/1.cpp jni/2.cpp jni/ndk_test.cpp jni/src/src1.cpp jni/src/src2.cpp jni/src/core/core1.cpp jni/src/core/core2.cpp</code></li>
+<li><code>LOCAL_SRC_FILES := $(MY_CPP_LIST:$(LOCAL_PATH)/%=%)</code>,前面我们获取的文件都是以<code>jni</code>开头的,而真正编译所需要的文件都应该是直接从<code>jni</code>目录开始的,所以我们使用<code>模式替换</code>把所有文件名前面的<code>jni/</code>去掉.</li>
+</ol>
+<p>这里我解释一下<code>$(MY_CPP_LIST:$(LOCAL_PATH)/%=%)</code>的语法含义,它的意思是对<code>MY_CPP_LIST</code>中每一项,应用冒号后面的规则,规则是什么呢?规则是<code>$(LOCAL_PATH)/%=%</code>,意思是,查找所有<code>$(LOCAL_PATH)/</code>开头的项,并截取后面部分</p>
+<p>最后一句话也可以使用subst函数写成:</p>
+<pre><code>#替换每一项中的 <span class="string">"$(LOCAL_PATH)/"</span> 为 <span class="string">""</span>(空)
+LOCAL_SRC_FILES := $(subst $(LOCAL_PATH)/, , $(MY_CPP_LIST))  
+</code></pre><p>或使用patsubst函数写成</p>
+<pre><code>#同模式替换,这里使用patsubst函数
+LOCAL_SRC_FILES := <span class="variable">$(</span>patsubst <span class="variable">$(</span>LOCAL_PATH)/<span class="variable">%,</span> <span class="variable">%,</span> <span class="variable">$(</span>MY_CPP_LIST))  
+</code></pre><p>具体语法请参考:<a href="http://www.gnu.org/software/make/manual/html_node/Text-Functions.html" target="_blank" rel="external">Functions for String Substitution and Analysis</a></p>
+<p>实际使用中,可以把代码放在jni目录以外的目录里,这时只要修改<a href="http://www.gnu.org/software/make/manual/html_node/Wildcards.html" target="_blank" rel="external">wildcard</a>函数里的相对路径就可以了,甚至也可以使用绝对路径,只要你愿意.</p>
+<p>以上代码已经足以应付大多数情况了,不过人的懒惰是无极限的,像上面的情况我的所有源文件都在jni目录下,为什么还要把每个子目录都写一行呢,不太优雅呀,最好能写一句话把jni目录下的所有源文件都引入.</p>
+<h3 id="进阶:引入单个目录(包括子目录)下的所有cpp源文件">进阶:引入单个目录(包括子目录)下的所有cpp源文件</h3>
+<p>为了<strong>达到引入目录下的所有源文件,包括子目录</strong>这个目标,我在<code>android.mk</code>中这样写</p>
+<pre><code><span class="comment">#声明一个变量MY_CPP_PATH表示源码目录</span>
+<span class="constant">MY_CPP_PATH</span> := <span class="variable">$(LOCAL_PATH)</span>/ 
+
+<span class="comment">#获取目录下的所有文件    </span>
+<span class="constant">My_All_Files</span> := <span class="variable">$(shell find $(MY_CPP_PATH)</span>/.)
+<span class="constant">My_All_Files</span> := <span class="variable">$(My_All_Files:$(MY_CPP_PATH)</span>/./%=<span class="variable">$(MY_CPP_PATH)</span>%)
+
+<span class="comment">#从My_All_Files中再次提取所有的cpp文件,这里也可以使用filter函数</span>
+<span class="constant">MY_CPP_LIST</span> := <span class="variable">$(foreach c_file,$(My_All_Files)</span>, <span class="variable">$(wildcard $(c_file)</span>/*.cpp) ) 
+<span class="constant">MY_CPP_LIST</span> := <span class="variable">$(MY_CPP_LIST:$(LOCAL_PATH)</span>/%=%)
+
+<span class="constant">LOCAL_SRC_FILES</span> := <span class="variable">$(MY_CPP_LIST)</span>
+</code></pre><p>通过以上几行,成功得到了jni目录包含它的子目录下的所有cpp源文件,并正确编译.实际使用中,代码不一定存放在jni目录下,修改<code>MY_CPP_PATH</code>就可以了,注意:<code>MY_CPP_PATH</code>最好使用以<code>$(LOCAL_PATH)</code>开头的相对目录</p>
+<p>这种写法极大的方便了项目的开发,以前在源码目录下新建cpp源文件,新建目录都不需要再来修改<code>android.mk</code>文件了.</p>
+<p>还有一个问题,上面代码里只是引入cpp文件,如果源码文件夹下还有c文件呢,怎么办?再多写几行?</p>
+<h3 id="进阶2-0:引入单个目录(包括子目录)下的所有*-cpp和*-c源文件">进阶2.0:引入单个目录(包括子目录)下的所有*.cpp和*.c源文件</h3>
+<p>这里,我直接给出代码</p>
+<pre><code>MY_CPP_PATH  := <span class="variable">$(</span>LOCAL_PATH)/
+My_All_Files := <span class="variable">$(</span>shell find <span class="variable">$(</span>MY_CPP_PATH)/.)
+My_All_Files := <span class="variable">$(</span>My_All_Files:<span class="variable">$(</span>MY_CPP_PATH)/./<span class="variable">%=</span><span class="variable">$(</span>MY_CPP_PATH)<span class="variable">%)</span>
+MY_CPP_LIST  := <span class="variable">$(</span><span class="keyword">filter</span> <span class="variable">%.</span>cpp <span class="variable">%.</span>c,<span class="variable">$(</span>My_All_Files)) 
+MY_CPP_LIST  := <span class="variable">$(</span>MY_CPP_LIST:<span class="variable">$(</span>LOCAL_PATH)/<span class="variable">%=</span><span class="variable">%)</span>
+
+LOCAL_SRC_FILES := <span class="variable">$(</span>MY_CPP_LIST)
+</code></pre><p>代码中用到了<a href="http://www.gnu.org/software/make/manual/html_node/Text-Functions.html" target="_blank" rel="external">filter</a>函数.</p>
+<p>还不满足?如果项目的源码有多个目录放在不同的地方,而且有多个后缀,怎么办?</p>
+<h3 id="终极进阶:引入多个目录(包括子目录)下的多个后缀名的源文件">终极进阶:引入多个目录(包括子目录)下的多个后缀名的源文件</h3>
+<p>上代码(2013年10月9日修正):</p>
+<pre><code># 扫描目录下的所有源文件
+MY_FILES_PATH  :=  <span class="variable">$(</span>LOCAL_PATH) \
+                   <span class="variable">$(</span>LOCAL_PATH)/../../Classes
+
+MY_FILES_SUFFIX := <span class="variable">%.</span>cpp <span class="variable">%.</span>c <span class="variable">%.</span>cc
+
+My_All_Files := <span class="variable">$(</span>foreach src_path,<span class="variable">$(</span>MY_FILES_PATH), <span class="variable">$(</span>shell find <span class="variable">$(</span>src_path) -type f) ) 
+My_All_Files := <span class="variable">$(</span>My_All_Files:<span class="variable">$(</span>MY_CPP_PATH)/./<span class="variable">%=</span><span class="variable">$(</span>MY_CPP_PATH)<span class="variable">%)</span>
+MY_SRC_LIST  := <span class="variable">$(</span><span class="keyword">filter</span> <span class="variable">$(</span>MY_FILES_SUFFIX),<span class="variable">$(</span>My_All_Files)) 
+MY_SRC_LIST  := <span class="variable">$(</span>MY_SRC_LIST:<span class="variable">$(</span>LOCAL_PATH)/<span class="variable">%=</span><span class="variable">%)</span>
+LOCAL_SRC_FILES := <span class="variable">$(</span>MY_SRC_LIST)
+</code></pre><p>以上代码中,变量<code>MY_FILES_PATH</code>保存源文件所在目录,<code>MY_FILES_SUFFIX</code>保存源文件的后缀名</p>
+<p><a href="http://blog.ready4go.com/" target="_blank" rel="external">原创文章,转载请注明,谢谢!</a></p>
+<h3 id="PS:如何debug_一个android-mk文件">PS:如何debug 一个android.mk文件</h3>
+<p>有一个办法,那就是在编译过程输出<code>android.mk</code>文件中变量的值,就可以观察分析问题所在了,使用代码</p>
+<pre><code><span class="variable">$(</span><span class="keyword">warning</span> <span class="variable">$(</span>LOCAL_SRC_FILES))
+</code></pre><p>就可以在编译过程中从终端窗口中观察到变量<code>LOCAL_SRC_FILES</code>的值</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://blog.ready4go.com/blog/2013/05/20/write-local-src-files-in-android-dot-mk-ultimate-skills/" data-id="vddpi6x9gkijwnqw" class="article-share-link">分享到</a>
+      
+
+      
+        <a href="http://blog.ready4go.com/blog/2013/05/20/write-local-src-files-in-android-dot-mk-ultimate-skills/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2013/06/02/update-seabios-on-google-chromebook-pixel/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          update SeaBIOS on Google Chromebook Pixel
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2013/05/19/correct-amd-hd-6xxx-recognized-by-black-mac-os-x/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">使用Clover 修正被黑苹果识别为 HD 6xxx 的 HD 6450显卡</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/Ubuntu/">Ubuntu</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/Ubuntu/Mac/">Mac</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/Ubuntu/Mac/TimeMachine/">TimeMachine</a><span class="category-list-count">1</span></li></ul></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mac/">Mac</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Mac/xcode/">xcode</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK/">NDK</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/NDK/xcode/">xcode</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/android/NDK/">NDK</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/android/eclipse/">eclipse</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromebook-pixel/">chromebook_pixel</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/chromebook-pixel/linux/">linux</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/cocos2d-x/">cocos2d-x</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/cocos2d-x/android/">android</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/cocos2d-x/android/NDK/">NDK</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/cocos2d-x/android/NDK/eclipse/">eclipse</a><span class="category-list-count">1</span></li></ul></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/hackintosh/">hackintosh</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/hackintosh/Clover/">Clover</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/mac/">mac</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/ubuntu/">ubuntu</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/xcode/">xcode</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">October 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">September 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">August 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">July 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">June 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">May 2013</a><span class="archive-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2014/06/06/xcode6-beta-build-fix/">xcode6_beta build fix: Undefined symbols _fwrite$UNIX2003</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2013/11/06/issue-about-xcode-5-with-copy-resource-files/">解决 xcode 5 资源文件更新后不自动复制的问题</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2013/10/25/set-ubuntu-as-mac-afp-and-timemachine-server-with-netatalk-3-dot-05/">Set ubuntu as Mac AFP&amp;amp;TimeMachine server with netatalk 3.05</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2013/10/12/update-android-dot-mk-with-local-src-files-and-local-c-includes/">Update: Android.mk 中的 LOCAL_SRC_FILES, LOCAL_C_INCLUDES</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2013/10/10/change-xcode-code-snippet-style/">自定义xcode代码提示的风格</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="http://blog-fengjian.rhcloud.com/" target="_blank">风间星魂</a>
+          </li>
+        
+          <li>
+            <a href="http://tech.i24e.co/" target="_blank">Charles</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 Jason Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'ready4go';
+  
+  var disqus_url = 'http://blog.ready4go.com/blog/2013/05/20/write-local-src-files-in-android-dot-mk-ultimate-skills/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+<! -- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+                processEscapes: true
+                    
+}
+  
+        });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+                  
+}
+    
+        });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Queue(function() {
+            var all = MathJax.Hub.getAllJax(), i;
+            for(i=0; i < all.length; i += 1) {
+                            all[i].SourceElement().parentNode.className += ' has-jax';
+                                    
+            }
+                
+        });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>
